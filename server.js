@@ -19,7 +19,6 @@ app.get('/notes', (req, res) => {
 });
 
 app.get('/api/notes', (req, res) => {
-  // console.log(db);
   res.status(201).json(db);
 });
 
@@ -28,18 +27,28 @@ app.get('*', (req, res) => {
 });
 
 app.post('/api/notes', (req, res) => {
-  const {text, title} = req.body;
+  const {text, title, id} = req.body;
 
   const newEntry = {
     title: title,
     text: text,
     id: uuidv4(),
   };
-  console.log(newEntry);
+
   db.push(newEntry);
   fs.writeFileSync('./db/db.json', JSON.stringify(db));
 
   res.status(201).json(newEntry);
+});
+
+app.delete(`/api/notes/:id`, (req, res) => {
+  const id = req.params.id;
+
+  let filtered_Array = db.filter( (element)=> element.id != id);
+
+  fs.writeFileSync('./db/db.json', JSON.stringify(filtered_Array));
+
+  res.status(201).id;
 });
 
 app.listen(PORT, () => {
