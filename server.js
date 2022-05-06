@@ -1,5 +1,7 @@
 const express = require('express');
+const { v4: uuidv4 } = require('uuid');
 const path = require('path');
+const fs = require('fs');
 const db = require('./db/db.json');
 
 const PORT = 3001;
@@ -30,10 +32,12 @@ app.post('/api/notes', (req, res) => {
 
   const newEntry = {
     title: title,
-    text: text
+    text: text,
+    id: uuidv4(),
   };
-
+  console.log(newEntry);
   db.push(newEntry);
+  fs.writeFileSync('./db/db.json', JSON.stringify(db));
 
   res.status(201).json(newEntry);
 });
