@@ -2,11 +2,18 @@ const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const fs = require('fs');
-const db = require('./db/db.json');
 
-const PORT = 3001;
+const util = require('util');
+// const {
+//   readFromFile,
+//   readAndAppend,
+//   writeToFile,
+// } = require('../helpers/fsUtils');
+
+const PORT = process.env.port || 3001;
 
 const app = express();
+const readFromFile = util.promisify(fs.readFile);
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
@@ -19,7 +26,8 @@ app.get('/notes', (req, res) => {
 });
 
 app.get('/api/notes', (req, res) => {
-  res.status(201).json(db);
+  readFromFile('./db/db.json')
+    .then((data) => res.status(200).json(JSON.parse(data)));
 });
 
 app.get('*', (req, res) => {
@@ -29,26 +37,30 @@ app.get('*', (req, res) => {
 app.post('/api/notes', (req, res) => {
   const {text, title, id} = req.body;
 
-  const newEntry = {
-    title: title,
-    text: text,
-    id: uuidv4(),
-  };
-
-  db.push(newEntry);
-  fs.writeFileSync('./db/db.json', JSON.stringify(db));
-
-  res.status(201).json(newEntry);
+  readFromFile('./db/db.json')
+    .then((data) => {
+      let array = JSON.parse(data);
+      const newEntry = {
+        title: title,
+        text: text,
+        id: uuidv4(),
+      };
+  
+    array.push(newEntry);
+    fs.writeFileSync('./db/db.json', JSON.stringify(array));
+    res.status(200).json();});
 });
 
 app.delete(`/api/notes/:id`, (req, res) => {
-  const id = req.params.id;
+    const id = req.params.id;
 
-  let filtered_Array = db.filter( (element)=> element.id != id);
-
-  fs.writeFileSync('./db/db.json', JSON.stringify(filtered_Array));
-
-  res.status(201).id;
+    readFromFile('./db/db.json')
+    .then((data) => {
+      let array = JSON.parse(data);
+      let filtered_Array = array.filter(element => element.id != id);
+      fs.writeFileSync('./db/db.json', JSON.stringify(filtered_Array));
+     })
+    .then(res.json("deleted"));
 });
 
 app.listen(PORT, () => {
