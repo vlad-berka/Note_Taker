@@ -10,7 +10,7 @@ const util = require('util');
 //   writeToFile,
 // } = require('../helpers/fsUtils');
 
-const port_number = server.listen(process.env.PORT || 3000);
+const PORT = process.env.PORT || 3001;
 
 const app = express();
 const readFromFile = util.promisify(fs.readFile);
@@ -63,6 +63,6 @@ app.delete(`/api/notes/:id`, (req, res) => {
     .then(res.json("deleted"));
 });
 
-app.listen(port_number, () => {
+app.listen(PORT, () => {
   console.log(`Example app listening at http://localhost:${PORT}`);
 });
