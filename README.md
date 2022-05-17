@@ -59,6 +59,10 @@ THEN I am presented with empty fields to enter a new note title and the note’s
 
 [GitHub Pages Link:https://github.com/vlad-berka/Note_Taker](https://github.com/vlad-berka/Note_Taker)
 
+## URL to the deployed application hosted on Heroku
+
+[Heroku Deployment Link:https://shrouded-stream-07436.herokuapp.com/](https://shrouded-stream-07436.herokuapp.com/)
+
 ## Screenshot of the Team Profile Generator, General Appearance
 
 ![Vladimir Berka's Note Taker Screenshot, Front End](./assets/Note_Taker_ScreenShot.png "Note Taker, Screenshot, Front End")
